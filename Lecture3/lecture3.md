@@ -1,3 +1,7 @@
+![img.png](img.png)
+
+
+
 在Java中，`String`和`StringBuffer`都是用于处理文本字符串的类，但它们在设计和使用场景上有显著差异：
 
 ### String
