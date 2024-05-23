@@ -78,15 +78,18 @@
 
 这些术语帮助开发人员清晰地理解和设计对象的行为和状态管理，使代码更加可读、可维护。
 
+`BufferedReader.readLine()` 方法被称为一个 mutator（修改者），是因为它在读取操作时会更改 `BufferedReader`
+对象的内部状态。具体来说，`readLine()` 方法执行以下操作：
 
+1. **读取并返回当前行**: `readLine()` 从输入流中读取一行文本，并将其作为字符串返回。它会一直读取字符，直到遇到行尾符（如 '
+   \n' 或 '\r\n'）。
 
-`BufferedReader.readLine()` 方法被称为一个 mutator（修改者），是因为它在读取操作时会更改 `BufferedReader` 对象的内部状态。具体来说，`readLine()` 方法执行以下操作：
+2. **更新内部状态**: 每次调用 `readLine()` 时，`BufferedReader`
+   的内部缓冲区会前进，指向下一行的起始位置。这样，下次调用 `readLine()`
+   时，将从当前行的下一个字符位置开始读取。这是 `BufferedReader` 状态改变的核心。
 
-1. **读取并返回当前行**: `readLine()` 从输入流中读取一行文本，并将其作为字符串返回。它会一直读取字符，直到遇到行尾符（如 '\n' 或 '\r\n'）。
-
-2. **更新内部状态**: 每次调用 `readLine()` 时，`BufferedReader` 的内部缓冲区会前进，指向下一行的起始位置。这样，下次调用 `readLine()` 时，将从当前行的下一个字符位置开始读取。这是 `BufferedReader` 状态改变的核心。
-
-3. **影响后续读取操作**: 由于 `BufferedReader` 的内部指针已经前进，后续对 `readLine()` 或其他读取方法的调用将从新的位置继续，而不是从原来的位置。这种行为直接改变了 `BufferedReader` 的状态，使其不再是之前的状态。
+3. **影响后续读取操作**: 由于 `BufferedReader` 的内部指针已经前进，后续对 `readLine()`
+   或其他读取方法的调用将从新的位置继续，而不是从原来的位置。这种行为直接改变了 `BufferedReader` 的状态，使其不再是之前的状态。
 
 ### 具体机制
 
@@ -109,4 +112,5 @@ String secondLine = reader.readLine(); // 读取第二行，并且内部指针�
 - 当第一次调用 `readLine()` 时，`BufferedReader` 读取文件的第一行，并且内部状态前进到第二行的起始位置。
 - 当第二次调用 `readLine()` 时，`BufferedReader` 读取文件的第二行，并且内部状态前进到第三行的起始位置。
 
-因此，每次调用 `readLine()` 方法都会改变 `BufferedReader` 对象的内部状态，使其符合 mutator 的定义。这种行为不仅影响返回的结果，还决定了下一次读取操作的起点，这就是为什么 `readLine()` 被认为是一个 mutator 方法的原因。
+因此，每次调用 `readLine()` 方法都会改变 `BufferedReader` 对象的内部状态，使其符合 mutator
+的定义。这种行为不仅影响返回的结果，还决定了下一次读取操作的起点，这就是为什么 `readLine()` 被认为是一个 mutator 方法的原因。
