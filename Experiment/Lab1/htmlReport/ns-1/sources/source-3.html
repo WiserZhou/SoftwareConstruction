@@ -1,0 +1,359 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Edge</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">graph</a>
+</div>
+
+<h1>Coverage Summary for Class: Edge (graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Edge</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (9/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (12/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package graph;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * An implementation of Graph.
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: you MUST use the provided rep.
+&nbsp; */
+&nbsp;public class ConcreteEdgesGraph&lt;L&gt; implements Graph&lt;L&gt; {
+&nbsp;
+&nbsp;    private final Set&lt;L&gt; vertices = new HashSet&lt;&gt;();
+&nbsp;    private final List&lt;Edge&lt;L&gt;&gt; edges = new ArrayList&lt;&gt;();
+&nbsp;
+&nbsp;    // Abstraction function:
+&nbsp;    // 表示一个有向图，其中顶点存储在&#39;vertices&#39;集合中，边则存储在&#39;edges&#39;列表里。
+&nbsp;    // 所以AF是从这两种抽象数据类型，到有向图的映射
+&nbsp;
+&nbsp;    // Representation invariant:
+&nbsp;    // edges 应该有起始节点，长度应该是大于0的实数
+&nbsp;    // 每个vertex必须在vertices集合中
+&nbsp;    // 每两点之间，最多只能有一条边，其源顶点和目标顶点都必须存在于&#39;vertices&#39;集合内。
+&nbsp;
+&nbsp;    // Safety from rep exposure:
+&nbsp;    //所有字段都是私有的并且是最终的(final)。
+&nbsp;    //&#39;vertices&#39;和&#39;edges&#39;作为不可变集合返回，形式为不可修改的视图。
+&nbsp;    // 在有必要的时候使用防御性拷贝
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 检查表示不变性
+&nbsp;     */
+&nbsp;    private void checkRep() {
+&nbsp;        // 用于检查每两点之间是否有多于一条边
+&nbsp;        Set&lt;String&gt; edgeSet = new HashSet&lt;&gt;();
+&nbsp;
+&nbsp;        for (Edge&lt;L&gt; edge : edges) {
+&nbsp;            L source = edge.getSource();
+&nbsp;            L target = edge.getTarget();
+&nbsp;            double weight = edge.getWeight();
+&nbsp;
+&nbsp;            // 检查源和目标顶点是否在顶点集合中
+&nbsp;            assert vertices.contains(source) : &quot;源顶点不在顶点集合中&quot;;
+&nbsp;            assert vertices.contains(target) : &quot;目标顶点不在顶点集合中&quot;;
+&nbsp;
+&nbsp;            // 检查边的权重是否大于0
+&nbsp;            assert weight &gt; 0 : &quot;边的权重必须是大于0的实数&quot;;
+&nbsp;
+&nbsp;            // 检查每两点之间是否有多于一条边
+&nbsp;            String edgeIdentifier = source.toString() + &quot;-&gt;&quot; + target.toString();
+&nbsp;            assert !edgeSet.contains(edgeIdentifier) : &quot;每两点之间最多只能有一条边&quot;;
+&nbsp;            edgeSet.add(edgeIdentifier);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean add(L vertex) {
+&nbsp;        if (vertex == null) throw new NullPointerException(&quot;顶点不能为null&quot;);
+&nbsp;        if (vertices.contains(vertex)) {
+&nbsp;            return false; // 顶点已存在
+&nbsp;        }
+&nbsp;        vertices.add(vertex);
+&nbsp;        checkRep();
+&nbsp;        return true;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int set(L source, L target, int weight) {
+&nbsp;        if (source == null || target == null) throw new NullPointerException(&quot;源和目标不能为null&quot;);
+&nbsp;        if (!vertices.contains(source)) add(source);
+&nbsp;        if (!vertices.contains(target)) add(target);
+&nbsp;
+&nbsp;        // 查找现有的边
+&nbsp;        for (Edge&lt;L&gt; e : edges) {
+&nbsp;            if (e.getSource().equals(source) &amp;&amp; e.getTarget().equals(target)) {
+&nbsp;                int oldWeight = e.getWeight();
+&nbsp;                edges.remove(e); // 移除现有的边
+&nbsp;                if (weight &gt; 0) {
+&nbsp;                    edges.add(new Edge&lt;&gt;(source, target, weight)); // 添加新边
+&nbsp;                }
+&nbsp;                checkRep();
+&nbsp;                return oldWeight; // 返回旧权重
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // 如果没有找到现有的边
+&nbsp;        if (weight &gt; 0) {
+&nbsp;            edges.add(new Edge&lt;&gt;(source, target, weight)); // 添加新边
+&nbsp;        }
+&nbsp;        checkRep();
+&nbsp;        return 0; // 返回0表示没有旧边
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean remove(L vertex) {
+&nbsp;        if (!vertices.contains(vertex)) {
+&nbsp;            return false; // 顶点不存在
+&nbsp;        }
+&nbsp;        // 移除与顶点相关的边
+&nbsp;        edges.removeIf(edge -&gt; edge.getSource().equals(vertex) || edge.getTarget().equals(vertex));
+&nbsp;        // 移除顶点本身
+&nbsp;        vertices.remove(vertex);
+&nbsp;        checkRep();
+&nbsp;        return true;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Set&lt;L&gt; vertices() {
+&nbsp;        return Collections.unmodifiableSet(vertices);
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Map&lt;L, Integer&gt; sources(L target) {
+&nbsp;        Map&lt;L, Integer&gt; sourceMap = new HashMap&lt;&gt;();
+&nbsp;        for (Edge&lt;L&gt; edge : edges) {
+&nbsp;            if (edge.getTarget().equals(target)) {
+&nbsp;                sourceMap.put(edge.getSource(), edge.getWeight());
+&nbsp;            }
+&nbsp;        }
+&nbsp;        return Collections.unmodifiableMap(sourceMap);
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Map&lt;L, Integer&gt; targets(L source) {
+&nbsp;        Map&lt;L, Integer&gt; targetMap = new HashMap&lt;&gt;();
+&nbsp;        for (Edge&lt;L&gt; edge : edges) {
+&nbsp;            if (edge.getSource().equals(source)) {
+&nbsp;                targetMap.put(edge.getTarget(), edge.getWeight());
+&nbsp;            }
+&nbsp;        }
+&nbsp;        return Collections.unmodifiableMap(targetMap);
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+&nbsp;        StringBuilder sb = new StringBuilder();
+&nbsp;        sb.append(&quot;图: [&quot;);
+&nbsp;
+&nbsp;        // 添加顶点
+&nbsp;        boolean isFirstVertex = true;
+&nbsp;        for (L vertex : vertices) {
+&nbsp;            if (!isFirstVertex) {
+&nbsp;                sb.append(&quot;, &quot;);
+&nbsp;            }
+&nbsp;            sb.append(vertex.toString());
+&nbsp;            isFirstVertex = false;
+&nbsp;        }
+&nbsp;        sb.append(&quot;]&quot;);
+&nbsp;        // 添加边
+&nbsp;        for (Edge&lt;L&gt; edge : edges) {
+&nbsp;            sb.append(&quot;, (&quot;).append(edge.getSource().toString()).append(&quot;-&gt;&quot;).append(edge.getTarget().toString())
+&nbsp;                    .append(&quot;, 权重: &quot;).append(edge.getWeight()).append(&quot;)&quot;);
+&nbsp;        }
+&nbsp;
+&nbsp;        return sb.toString();
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * TODO specification
+&nbsp; * Immutable.
+&nbsp; * This class is internal to the rep of ConcreteEdgesGraph.
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: the specification and implementation of this class is
+&nbsp; * up to you.
+&nbsp; */
+<b class="fc">&nbsp;class Edge&lt;L&gt; {</b>
+&nbsp;
+&nbsp;    private final L source;
+&nbsp;    private final L target;
+&nbsp;    private final int weight;
+&nbsp;
+&nbsp;    // Abstraction function:
+&nbsp;    // 以source，target，weight组成的抽象数据型，到有向边集合的映射
+&nbsp;
+&nbsp;    // Representation invariant:
+&nbsp;    // 源和目标不能为null。
+&nbsp;    // 权重必须是非负数。
+&nbsp;
+&nbsp;    // Safety from rep exposure:
+&nbsp;    // 所有字段都是私有和最终的(final)。
+&nbsp;    // 使用不可变类型作为字段。
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 构建Edge对象。
+&nbsp;     *
+&nbsp;     * @param source 源顶点。
+&nbsp;     * @param target 目标顶点。
+&nbsp;     * @param weight 边的权重。
+&nbsp;     */
+<b class="fc">&nbsp;    public Edge(L source, L target, int weight) {</b>
+<b class="fc">&nbsp;        this.source = source;</b>
+<b class="fc">&nbsp;        this.target = target;</b>
+<b class="fc">&nbsp;        this.weight = weight;</b>
+<b class="fc">&nbsp;        checkRep();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 检查表示不变性是否保持。
+&nbsp;     */
+&nbsp;    private void checkRep() {
+<b class="pc">&nbsp;        assert source != null : &quot;源顶点不能为null&quot;;</b>
+<b class="pc">&nbsp;        assert target != null : &quot;目标顶点不能为null&quot;;</b>
+<b class="pc">&nbsp;        assert weight &gt;= 0 : &quot;权重必须是非负数&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 获取边的源顶点。
+&nbsp;     *
+&nbsp;     * @return 源顶点。
+&nbsp;     */
+&nbsp;    public L getSource() {
+<b class="fc">&nbsp;        return source;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 获取边的目标顶点。
+&nbsp;     *
+&nbsp;     * @return 目标顶点。
+&nbsp;     */
+&nbsp;    public L getTarget() {
+<b class="fc">&nbsp;        return target;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 获取边的权重。
+&nbsp;     *
+&nbsp;     * @return 边的权重。
+&nbsp;     */
+&nbsp;    public int getWeight() {
+<b class="fc">&nbsp;        return weight;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;(&quot; + source.toString() + &quot;-&gt;&quot; + target.toString() + &quot;, 权重: &quot; + weight + &quot;)&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-06 15:55</div>
+</div>
+</body>
+</html>

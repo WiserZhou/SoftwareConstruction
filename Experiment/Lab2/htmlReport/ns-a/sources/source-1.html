@@ -1,0 +1,173 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > FactoryLoader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">p2.util</a>
+</div>
+
+<h1>Coverage Summary for Class: FactoryLoader (p2.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FactoryLoader</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (9/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.1%
+  </span>
+  <span class="absValue">
+    (16/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package p2.util;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * FactoryLoader 是一个实用类，用于加载工厂类。
+&nbsp; * &lt;p&gt;
+&nbsp; * 抽象函数 (AF):
+&nbsp; * 该类用于加载工厂类并返回一个包含工厂实例的映射，键为工厂类名，值为工厂实例。
+&nbsp; * &lt;p&gt;
+&nbsp; * 表示不变性 (RI):
+&nbsp; * - 无特定的不变性要求。
+&nbsp; * &lt;p&gt;
+&nbsp; * 防止表示暴露 (Safety from Rep Exposure):
+&nbsp; * - 没有内部状态，因此不存在表示暴露的问题。
+&nbsp; */
+<b class="nc">&nbsp;public class FactoryLoader {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 扫描指定目录并加载工厂类。
+&nbsp;     *
+&nbsp;     * @param directoryPath    要扫描的目录路径。
+&nbsp;     * @param suffix           工厂类文件名后缀。
+&nbsp;     * @param packageName      工厂类所在包名。
+&nbsp;     * @param factoryClassType 工厂类的类型。
+&nbsp;     * @param &lt;T&gt;              工厂类的类型。
+&nbsp;     * @return 一个包含工厂实例的映射，键为工厂类名，值为工厂实例。
+&nbsp;     * @throws IllegalArgumentException 如果目录路径无效或无法实例化工厂类。
+&nbsp;     */
+&nbsp;    public static &lt;T&gt; Map&lt;String, T&gt; scanAndLoadFactories(String directoryPath, String suffix, String packageName, Class&lt;T&gt; factoryClassType) {
+<b class="fc">&nbsp;        Map&lt;String, T&gt; factoryMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        File directory = new File(directoryPath);</b>
+<b class="fc">&nbsp;        if (!directory.exists() || !directory.isDirectory()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;目录路径无效: &quot; + directoryPath);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String[] fileNames = directory.list((dir, name) -&gt; name.endsWith(suffix + &quot;.java&quot;));</b>
+<b class="pc">&nbsp;        if (fileNames == null || fileNames.length == 0) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;指定目录中没有找到工厂类&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        for (String fileName : fileNames) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                String className = fileName.substring(0, fileName.indexOf(suffix));</b>
+<b class="fc">&nbsp;                String factoryClassName = packageName + &quot;.&quot; + className + suffix;</b>
+<b class="fc">&nbsp;                Class&lt;?&gt; factoryClass = Class.forName(factoryClassName);</b>
+<b class="fc">&nbsp;                T factoryInstance = factoryClassType.cast(factoryClass.getDeclaredConstructor().newInstance());</b>
+<b class="fc">&nbsp;                factoryMap.put(className.toLowerCase(), factoryInstance);</b>
+<b class="fc">&nbsp;            } catch (Exception e) {</b>
+<b class="fc">&nbsp;                throw new IllegalArgumentException(&quot;无法实例化工厂类：&quot; + fileName + &quot;。错误信息：&quot; + e.getMessage(), e);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return factoryMap;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 21:35</div>
+</div>
+</body>
+</html>

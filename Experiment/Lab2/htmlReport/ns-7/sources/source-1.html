@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > EnvironmentSelectorFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">p2.Factory</a>
+</div>
+
+<h1>Coverage Summary for Class: EnvironmentSelectorFactory (p2.Factory)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnvironmentSelectorFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package p2.Factory;
+&nbsp;
+&nbsp;import p2.Interface.EnvironmentFactory;
+&nbsp;import p2.util.FactoryLoader;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * EnvironmentSelectorFactory 是一个用于扫描目录并选择合适的环境工厂并解析文件的实用类。
+&nbsp; * &lt;p&gt;
+&nbsp; * 抽象函数 (AF):
+&nbsp; * 该类表示一个从指定目录中读取环境工厂类并选择合适的工厂来创建环境工厂的实用类。
+&nbsp; * &lt;p&gt;
+&nbsp; * 表示不变性 (RI):
+&nbsp; * - 目录路径 DIRECTORY_PATH 必须是一个有效的字符串，不能为 null 或空。
+&nbsp; * &lt;p&gt;
+&nbsp; * 防止表示暴露 (Safety from Rep Exposure):
+&nbsp; * - 该类没有暴露其内部状态，因此不存在表示暴露的问题。
+&nbsp; */
+&nbsp;public class EnvironmentSelectorFactory {
+&nbsp;
+&nbsp;    private static final String DIRECTORY_PATH = &quot;src/main/java/p2/EnvFactory&quot;;  // 替换为你要扫描的目录路径
+&nbsp;    private final Map&lt;String, EnvironmentFactory&gt; factoryMap;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 构造一个 EnvironmentSelectorFactory 实例。
+&nbsp;     * 使用 FactoryLoader 扫描指定目录并加载环境工厂类。
+&nbsp;     */
+<b class="fc">&nbsp;    public EnvironmentSelectorFactory() {</b>
+<b class="fc">&nbsp;        factoryMap = FactoryLoader.scanAndLoadFactories(DIRECTORY_PATH, &quot;Factory&quot;, &quot;p2.EnvFactory&quot;, EnvironmentFactory.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 选择并解析文件。
+&nbsp;     *
+&nbsp;     * @param env      环境名称。
+&nbsp;     * @param filePath 文件路径。
+&nbsp;     * @throws IllegalArgumentException 如果环境名或文件路径为空，或者指定的环境类型不受支持。
+&nbsp;     */
+&nbsp;    public void selectEnv(String env, String filePath) {
+<b class="pc">&nbsp;        if (env == null || env.isEmpty() || filePath == null || filePath.isEmpty()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;环境名或文件路径不能为空&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        EnvironmentFactory environmentFactory = factoryMap.get(env.toLowerCase());</b>
+<b class="fc">&nbsp;        if (environmentFactory == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;不支持的环境类型：&quot; + env);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        environmentFactory.parseFile(filePath);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 21:35</div>
+</div>
+</body>
+</html>

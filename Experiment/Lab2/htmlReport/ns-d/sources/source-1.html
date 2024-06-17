@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Mocha</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">p3.Condiment</a>
+</div>
+
+<h1>Coverage Summary for Class: Mocha (p3.Condiment)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Mocha</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package p3.Condiment;
+&nbsp;
+&nbsp;import p3.Interface.CondimentDecorator;
+&nbsp;import p3.Interface.Beverage;
+&nbsp;
+&nbsp;/**
+&nbsp; * Mocha 是 CondimentDecorator 的一个具体实现类，表示一种摩卡调料。
+&nbsp; * &lt;p&gt;
+&nbsp; * 抽象函数 (AF):
+&nbsp; * 表示一种摩卡调料，可以添加到饮料中，并根据添加的数量增加饮料的成本。
+&nbsp; * &lt;p&gt;
+&nbsp; * 表示不变性 (RI):
+&nbsp; * - `beverage` 必须是一个有效的 Beverage 实例。
+&nbsp; * - `num` 必须是一个非负整数。
+&nbsp; * &lt;p&gt;
+&nbsp; * 防止表示暴露 (Safety from Rep Exposure):
+&nbsp; * - `beverage` 通过构造函数传递，并且没有提供修改其引用的方法。
+&nbsp; * - `num` 的值只能通过类的内部逻辑修改。
+&nbsp; */
+<b class="fc">&nbsp;public class Mocha extends CondimentDecorator {</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public double cost() {
+<b class="fc">&nbsp;        return beverage.cost() + 0.2 * num;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 21:35</div>
+</div>
+</body>
+</html>

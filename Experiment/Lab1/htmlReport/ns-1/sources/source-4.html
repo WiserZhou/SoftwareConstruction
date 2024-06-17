@@ -1,0 +1,202 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Graph</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">graph</a>
+</div>
+
+<h1>Coverage Summary for Class: Graph (graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Graph</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/* Copyright (c) 2015-2016 MIT 6.005 course staff, all rights reserved.
+&nbsp; * Redistribution of original or derived work requires permission of course staff.
+&nbsp; */
+&nbsp;package graph;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;/**
+&nbsp; * A mutable weighted directed graph with labeled vertices.
+&nbsp; * Vertices have distinct labels of an immutable type {@code L} when compared
+&nbsp; * using the {@link Object#equals(Object) equals} method.
+&nbsp; * Edges are directed and have a positive weight of type {@code int}.
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: this is a required ADT interface.
+&nbsp; * You MUST NOT change the specifications or add additional methods.
+&nbsp; *
+&nbsp; * @param &lt;L&gt; type of vertex labels in this graph, must be immutable
+&nbsp; */
+&nbsp;public interface Graph&lt;L&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Create an empty graph.
+&nbsp;     *
+&nbsp;     * @param &lt;L&gt; type of vertex labels in the graph, must be immutable
+&nbsp;     * @return a new empty weighted directed graph
+&nbsp;     */
+&nbsp;    public static &lt;L&gt; Graph&lt;L&gt; empty() {
+<b class="fc">&nbsp;        return new ConcreteEdgesGraph&lt;L&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a vertex to this graph.
+&nbsp;     *
+&nbsp;     * @param vertex label for the new vertex
+&nbsp;     * @return true if this graph did not already include a vertex with the
+&nbsp;     * given label; otherwise false (and this graph is not modified)
+&nbsp;     */
+&nbsp;    public boolean add(L vertex);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add, change, or remove a weighted directed edge in this graph.
+&nbsp;     * If weight is nonzero, add an edge or update the weight of that edge;
+&nbsp;     * vertices with the given labels are added to the graph if they do not
+&nbsp;     * already exist.
+&nbsp;     * If weight is zero, remove the edge if it exists (the graph is not
+&nbsp;     * otherwise modified).
+&nbsp;     *
+&nbsp;     * @param source label of the source vertex
+&nbsp;     * @param target label of the target vertex
+&nbsp;     * @param weight nonnegative weight of the edge
+&nbsp;     * @return the previous weight of the edge, or zero if there was no such
+&nbsp;     * edge
+&nbsp;     */
+&nbsp;    public int set(L source, L target, int weight);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Remove a vertex from this graph; any edges to or from the vertex are
+&nbsp;     * also removed.
+&nbsp;     *
+&nbsp;     * @param vertex label of the vertex to remove
+&nbsp;     * @return true if this graph included a vertex with the given label;
+&nbsp;     * otherwise false (and this graph is not modified)
+&nbsp;     */
+&nbsp;    public boolean remove(L vertex);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all the vertices in this graph.
+&nbsp;     *
+&nbsp;     * @return the set of labels of vertices in this graph
+&nbsp;     */
+&nbsp;    public Set&lt;L&gt; vertices();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get the source vertices with directed edges to a target vertex and the
+&nbsp;     * weights of those edges.
+&nbsp;     *
+&nbsp;     * @param target a label
+&nbsp;     * @return a map where the key set is the set of labels of vertices such
+&nbsp;     * that this graph includes an edge from that vertex to target, and
+&nbsp;     * the value for each key is the (nonzero) weight of the edge from
+&nbsp;     * the key to target
+&nbsp;     */
+&nbsp;    public Map&lt;L, Integer&gt; sources(L target);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get the target vertices with directed edges from a source vertex and the
+&nbsp;     * weights of those edges.
+&nbsp;     *
+&nbsp;     * @param source a label
+&nbsp;     * @return a map where the key set is the set of labels of vertices such
+&nbsp;     * that this graph includes an edge from source to that vertex, and
+&nbsp;     * the value for each key is the (nonzero) weight of the edge from
+&nbsp;     * source to the key
+&nbsp;     */
+&nbsp;    public Map&lt;L, Integer&gt; targets(L source);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-06 15:55</div>
+</div>
+</body>
+</html>

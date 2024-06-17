@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > EnvironmentFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">p2.Interface</a>
+</div>
+
+<h1>Coverage Summary for Class: EnvironmentFactory (p2.Interface)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnvironmentFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (6/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.3%
+  </span>
+  <span class="absValue">
+    (11/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EnvironmentFactory$MockitoMock$130775413</td>
+  </tr>
+  <tr>
+    <td class="name">EnvironmentFactory$MockitoMock$130775413$auxiliary$BkHdPCzp</td>
+  </tr>
+  <tr>
+    <td class="name">EnvironmentFactory$MockitoMock$130775413$auxiliary$CuRx4U5z</td>
+  </tr>
+  <tr>
+    <td class="name">EnvironmentFactory$MockitoMock$130775413$auxiliary$iwYZTcSB</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (6/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.3%
+  </span>
+  <span class="absValue">
+    (11/15)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package p2.Interface;
+&nbsp;
+&nbsp;import p2.util.FactoryLoader;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * EnvironmentFactory 是一个用于扫描目录并选择合适的解析器工厂并解析文件的抽象类。
+&nbsp; */
+&nbsp;public abstract class EnvironmentFactory {
+&nbsp;
+&nbsp;    private static final String DIRECTORY_PATH = &quot;src/main/java/p2/Parser&quot;;  // 替换为你要扫描的目录路径
+&nbsp;    private final Map&lt;String, Parser&gt; parserFactoryMap;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 构造一个 EnvironmentFactory 实例。
+&nbsp;     * 使用 FactoryLoader 扫描指定目录并加载解析器工厂类。
+&nbsp;     */
+<b class="fc">&nbsp;    public EnvironmentFactory() {</b>
+<b class="fc">&nbsp;        parserFactoryMap = FactoryLoader.scanAndLoadFactories(DIRECTORY_PATH, &quot;TypeParser&quot;, &quot;p2.Parser&quot;, Parser.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 解析文件。
+&nbsp;     *
+&nbsp;     * @param filePath 文件路径。
+&nbsp;     * @throws IllegalArgumentException 如果文件路径为空或文件类型不受支持。
+&nbsp;     */
+&nbsp;    public void parseFile(String filePath) {
+<b class="pc">&nbsp;        if (filePath == null || filePath.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;文件路径不能为空&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String fileType = getFileType(filePath);</b>
+<b class="pc">&nbsp;        if (judgeType(fileType)) {</b>
+<b class="fc">&nbsp;            Parser parser = parserFactoryMap.get(fileType);</b>
+<b class="pc">&nbsp;            if (parser == null) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;不支持的文件类型：&quot; + fileType);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            parser.parse(filePath);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            System.out.println(&quot;此环境无法解析此类型文件！&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 判断给定文件类型是否能被当前环境解析。
+&nbsp;     *
+&nbsp;     * @param fileType 文件类型。
+&nbsp;     * @return 如果能解析则返回 true，否则返回 false。
+&nbsp;     */
+&nbsp;    protected abstract Boolean judgeType(String fileType);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 从文件路径中提取文件类型（扩展名）。
+&nbsp;     *
+&nbsp;     * @param filePath 文件路径。
+&nbsp;     * @return 文件类型（扩展名）或空字符串（如果没有扩展名）。
+&nbsp;     */
+&nbsp;    private static String getFileType(String filePath) {
+<b class="fc">&nbsp;        int dotIndex = filePath.lastIndexOf(&#39;.&#39;);</b>
+<b class="pc">&nbsp;        if (dotIndex != -1 &amp;&amp; dotIndex &lt; filePath.length() - 1) {</b>
+<b class="fc">&nbsp;            return filePath.substring(dotIndex + 1).toLowerCase();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return &quot;&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 21:35</div>
+</div>
+</body>
+</html>

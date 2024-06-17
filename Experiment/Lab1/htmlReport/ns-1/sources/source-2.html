@@ -1,0 +1,414 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > ConcreteVerticesGraph</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">graph</a>
+</div>
+
+<h1>Coverage Summary for Class: ConcreteVerticesGraph (graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConcreteVerticesGraph</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.9%
+  </span>
+  <span class="absValue">
+    (58/66)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.7%
+  </span>
+  <span class="absValue">
+    (77/78)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package graph;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * An implementation of Graph.
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: you MUST use the provided rep.
+&nbsp; */
+<b class="fc">&nbsp;public class ConcreteVerticesGraph&lt;L&gt; implements Graph&lt;L&gt; {</b>
+&nbsp;
+<b class="fc">&nbsp;    private final List&lt;Vertex&lt;L&gt;&gt; vertices = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;    // Abstraction function:
+&nbsp;    // 表示一个有向图，其中顶点存储在&#39;vertices&#39;列表中，每个顶点包含它的出边。
+&nbsp;    // 所以AF是从顶点列表到有向图的映射
+&nbsp;
+&nbsp;    // Representation invariant:
+&nbsp;    // 顶点列表中的每个顶点应该是唯一的。
+&nbsp;    // 顶点的名称不能为空。
+&nbsp;    // 每个顶点的边的目标顶点应该存在于顶点列表中。
+&nbsp;    // 边的权重应该是大于0的实数。
+&nbsp;
+&nbsp;    // Safety from rep exposure:
+&nbsp;    // 所有字段都是私有的并且是最终的(final)。
+&nbsp;    // 在有必要的时候使用防御性拷贝，确保外部无法直接修改内部数据结构。
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 检查表示不变性
+&nbsp;     */
+&nbsp;    private void checkRep() {
+<b class="fc">&nbsp;        Set&lt;L&gt; existingVertexNames = new HashSet&lt;&gt;(vertices.size());</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; vertex : vertices) {</b>
+<b class="pc">&nbsp;            assert vertex.getName() != null : &quot;顶点名称不能为空&quot;;</b>
+&nbsp;
+&nbsp;            // 在检查之前，先收集所有顶点的名称
+<b class="pc">&nbsp;            if (!existingVertexNames.add(vertex.getName())) {</b>
+<b class="nc">&nbsp;                throw new IllegalStateException(&quot;顶点名称必须唯一&quot;);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            Map&lt;L, Integer&gt; edges = vertex.getEdges();</b>
+<b class="fc">&nbsp;            for (Map.Entry&lt;L, Integer&gt; entry : edges.entrySet()) {</b>
+<b class="pc">&nbsp;                assert entry.getValue() &gt; 0 : &quot;边的权重必须是正数&quot;;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean add(L vertex) {
+<b class="fc">&nbsp;        if (vertex == null) throw new NullPointerException(&quot;顶点不能为null&quot;);</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+<b class="fc">&nbsp;            if (v.getName().equals(vertex)) {</b>
+<b class="fc">&nbsp;                return false; // 顶点已存在</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        vertices.add(new Vertex&lt;&gt;(vertex));</b>
+<b class="fc">&nbsp;        checkRep();</b>
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int set(L source, L target, int weight) {
+<b class="pc">&nbsp;        if (source == null || target == null) throw new NullPointerException(&quot;源和目标不能为null&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        Vertex&lt;L&gt; sourceVertex = findVertex(source);</b>
+<b class="fc">&nbsp;        int oldWeight = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;        if (sourceVertex != null) {</b>
+<b class="fc">&nbsp;            if (weight == 0) {</b>
+<b class="fc">&nbsp;                oldWeight = sourceVertex.removeEdge(target);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                oldWeight = sourceVertex.setEdge(target, weight);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="fc">&nbsp;            if (weight != 0) {</b>
+<b class="fc">&nbsp;                sourceVertex = new Vertex&lt;&gt;(source);</b>
+<b class="fc">&nbsp;                sourceVertex.setEdge(target, weight);</b>
+<b class="fc">&nbsp;                vertices.add(sourceVertex);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        checkRep();</b>
+<b class="fc">&nbsp;        return oldWeight;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 在顶点列表中查找指定名称的顶点。
+&nbsp;     *
+&nbsp;     * @param name 要查找的顶点名称。
+&nbsp;     * @return 如果找到，则返回该顶点；否则返回null。
+&nbsp;     */
+&nbsp;    private Vertex&lt;L&gt; findVertex(L name) {
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; vertex : vertices) {</b>
+<b class="fc">&nbsp;            if (vertex.getName().equals(name)) {</b>
+<b class="fc">&nbsp;                return vertex;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean remove(L vertex) {
+<b class="fc">&nbsp;        Vertex&lt;L&gt; vertexToRemove = null;</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+<b class="fc">&nbsp;            if (v.getName().equals(vertex)) {</b>
+<b class="fc">&nbsp;                vertexToRemove = v;</b>
+&nbsp;                break;
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if (vertexToRemove == null) {</b>
+<b class="fc">&nbsp;            return false; // 顶点不存在</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        vertices.remove(vertexToRemove);</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+<b class="fc">&nbsp;            v.removeEdge(vertex);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        checkRep();</b>
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Set&lt;L&gt; vertices() {
+<b class="fc">&nbsp;        Set&lt;L&gt; vertexNames = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+<b class="fc">&nbsp;            vertexNames.add(v.getName());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return Collections.unmodifiableSet(vertexNames);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Map&lt;L, Integer&gt; sources(L target) {
+&nbsp;        // 创建一个存储源顶点及其权重的映射
+<b class="fc">&nbsp;        Map&lt;L, Integer&gt; sourceMap = new HashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;        // 标记是否存在自环边的布尔变量，默认为false
+<b class="fc">&nbsp;        boolean hasSelfLoop = false;</b>
+&nbsp;
+&nbsp;        // 遍历图中的每个顶点
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+&nbsp;            // 如果当前顶点的名称等于目标顶点的名称，并且当前顶点的边集合中包含目标顶点的名称
+<b class="fc">&nbsp;            if (v.getName().equals(target) &amp;&amp; v.getEdges().containsKey(target)) {</b>
+&nbsp;                // 将目标顶点及其权重添加到源顶点映射中
+<b class="fc">&nbsp;                sourceMap.put(target, v.getEdges().get(target));</b>
+&nbsp;                // 标记存在自环边
+<b class="fc">&nbsp;                hasSelfLoop = true;</b>
+&nbsp;            }
+&nbsp;            // 如果当前顶点的边集合中包含目标顶点的名称，但当前顶点的名称不等于目标顶点的名称
+<b class="fc">&nbsp;            else if (v.getEdges().containsKey(target)) {</b>
+&nbsp;                // 将当前顶点及其与目标顶点之间的权重添加到源顶点映射中
+<b class="fc">&nbsp;                sourceMap.put(v.getName(), v.getEdges().get(target));</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // 处理自环边的情况
+<b class="fc">&nbsp;        if (!hasSelfLoop) {</b>
+&nbsp;            // 如果不存在自环边，从源顶点映射中移除目标顶点
+<b class="fc">&nbsp;            sourceMap.remove(target);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 返回不可修改的源顶点映射
+<b class="fc">&nbsp;        return Collections.unmodifiableMap(sourceMap);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Map&lt;L, Integer&gt; targets(L source) {
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; v : vertices) {</b>
+<b class="pc">&nbsp;            if (v.getName().equals(source)) {</b>
+<b class="fc">&nbsp;                return Collections.unmodifiableMap(v.getEdges());</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return Collections.unmodifiableMap(new HashMap&lt;&gt;());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="fc">&nbsp;        sb.append(&quot;图: [&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        boolean isFirstVertex = true;</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; vertex : vertices) {</b>
+<b class="fc">&nbsp;            if (!isFirstVertex) {</b>
+<b class="fc">&nbsp;                sb.append(&quot;, &quot;);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            sb.append(vertex.getName().toString());</b>
+<b class="fc">&nbsp;            isFirstVertex = false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        sb.append(&quot;]&quot;);</b>
+<b class="fc">&nbsp;        for (Vertex&lt;L&gt; vertex : vertices) {</b>
+<b class="fc">&nbsp;            for (Map.Entry&lt;L, Integer&gt; edge : vertex.getEdges().entrySet()) {</b>
+<b class="fc">&nbsp;                sb.append(&quot;, (&quot;).append(vertex.getName().toString()).append(&quot;-&gt;&quot;).append(edge.getKey().toString())</b>
+<b class="fc">&nbsp;                        .append(&quot;, 权重: &quot;).append(edge.getValue().toString()).append(&quot;)&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        return sb.toString();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Mutable.
+&nbsp; * This class is internal to the rep of ConcreteVerticesGraph.
+&nbsp; */
+&nbsp;class Vertex&lt;L&gt; {
+&nbsp;
+&nbsp;    private final L name;
+&nbsp;    private final Map&lt;L, Integer&gt; edges = new HashMap&lt;&gt;();
+&nbsp;
+&nbsp;    // Abstraction function:
+&nbsp;    // 表示一个顶点以及它指向的有向边的集合。
+&nbsp;    // 顶点名称存储在&#39;name&#39;字段中，边存储在&#39;edges&#39;映射中，其中键是目标顶点，值是边的权重。
+&nbsp;
+&nbsp;    // Representation invariant:
+&nbsp;    // 顶点名称不能为null。
+&nbsp;    // 边的权重必须是非负数。
+&nbsp;
+&nbsp;    // Safety from rep exposure:
+&nbsp;    // 所有字段都是私有和最终的。
+&nbsp;    // 使用不可变类型作为字段。
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 构建Vertex对象。
+&nbsp;     *
+&nbsp;     * @param name 顶点名称。
+&nbsp;     */
+&nbsp;    public Vertex(L name) {
+&nbsp;        this.name = name;
+&nbsp;        checkRep();
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 检查表示不变性是否保持。
+&nbsp;     */
+&nbsp;    private void checkRep() {
+&nbsp;        assert name != null : &quot;顶点名称不能为null&quot;;
+&nbsp;        for (int weight : edges.values()) {
+&nbsp;            assert weight &gt;= 0 : &quot;边的权重必须是非负数&quot;;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 获取顶点名称。
+&nbsp;     *
+&nbsp;     * @return 顶点名称。
+&nbsp;     */
+&nbsp;    public L getName() {
+&nbsp;        return name;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 获取顶点的边集合。
+&nbsp;     *
+&nbsp;     * @return 边集合，不可变视图。
+&nbsp;     */
+&nbsp;    public Map&lt;L, Integer&gt; getEdges() {
+&nbsp;        return Collections.unmodifiableMap(edges);
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 设置边的权重。如果边已经存在，更新其权重；否则，添加新的边。
+&nbsp;     *
+&nbsp;     * @param target 目标顶点。
+&nbsp;     * @param weight 边的权重。
+&nbsp;     * @return 旧的权重，如果没有旧边则返回0。
+&nbsp;     */
+&nbsp;    public int setEdge(L target, int weight) {
+&nbsp;        Integer oldWeight = edges.put(target, weight);
+&nbsp;        return oldWeight != null ? oldWeight : 0;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 移除与目标顶点的边。
+&nbsp;     *
+&nbsp;     * @param target 目标顶点。
+&nbsp;     * @return 旧的权重值，如果没有与目标顶点相关联的边则返回0。
+&nbsp;     */
+&nbsp;    public int removeEdge(L target) {
+&nbsp;        Integer oldWeight = edges.remove(target);
+&nbsp;        return oldWeight != null ? oldWeight : 0;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+&nbsp;        return &quot;顶点: &quot; + name.toString() + &quot;, 边: &quot; + edges.toString();
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-06 15:55</div>
+</div>
+</body>
+</html>

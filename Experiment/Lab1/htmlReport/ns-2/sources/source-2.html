@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Main</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">poet</a>
+</div>
+
+<h1>Coverage Summary for Class: Main (poet)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Main</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.1%
+  </span>
+  <span class="absValue">
+    (4/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/* Copyright (c) 2015-2016 MIT 6.005 course staff, all rights reserved.
+&nbsp; * Redistribution of original or derived work requires permission of course staff.
+&nbsp; */
+&nbsp;package poet;
+&nbsp;
+&nbsp;import java.io.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Example program using GraphPoet.
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: you are free to change this example class.
+&nbsp; */
+&nbsp;public class Main {
+<b class="nc">&nbsp;</b>
+&nbsp;    /**
+&nbsp;     * Generate example poetry.
+&nbsp;     *
+&nbsp;     * @param args unused
+&nbsp;     * @throws IOException if a poet corpus file cannot be found or read
+&nbsp;     */
+&nbsp;    public static void main(String[] args) throws IOException {
+&nbsp;//        RemoveDot();
+&nbsp;        final GraphPoet nimoy = new GraphPoet(new File(&quot;src/main/resources/StrayBirds2.txt&quot;));
+<b class="fc">&nbsp;        final String input = &quot;It is the tears of the earth that keep her smiles in bloom.&quot;;</b>
+<b class="fc">&nbsp;        System.out.println(input + &quot;\n&gt;&gt;&gt;\n&quot; + nimoy.poem(input));</b>
+<b class="fc">&nbsp;        System.out.println(nimoy);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 从文本文件中移除句号、问号和引号。
+&nbsp;     *
+&nbsp;     * @throws IOException 如果在读取或写入文件时发生错误。
+&nbsp;     */
+&nbsp;    public static void RemoveDot() throws IOException {
+&nbsp;        // 输入文件路径和输出文件路径
+&nbsp;        String inputFile = &quot;src/main/resources/StrayBirds.txt&quot;;
+<b class="nc">&nbsp;        String outputFile = &quot;src/main/resources/StrayBirds2.txt&quot;;</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        // 读取输入文件
+&nbsp;        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+<b class="nc">&nbsp;        // 创建一个用于写入的缓冲区</b>
+&nbsp;        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+<b class="nc">&nbsp;</b>
+&nbsp;        String line;
+&nbsp;        // 逐行读取文件内容
+&nbsp;        while ((line = reader.readLine()) != null) {
+<b class="nc">&nbsp;            // 去掉每行中的英文句号，问号和引号</b>
+&nbsp;            String newLine = line.replace(&quot;.&quot;, &quot;&quot;);
+<b class="nc">&nbsp;            newLine = newLine.replace(&quot;\&quot;&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;            newLine = newLine.replace(&quot;?&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;            // 将处理后的内容写入输出文件</b>
+&nbsp;            // 如果去除符号后不为空行，则写入输出文件
+&nbsp;            if (!newLine.trim().isEmpty()) {
+<b class="nc">&nbsp;                writer.write(newLine);</b>
+<b class="nc">&nbsp;                writer.newLine();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 关闭读写流
+&nbsp;        reader.close();
+<b class="nc">&nbsp;        writer.close();</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        System.out.println(&quot;英文句号、引号、问号已经成功去除并保存到输出文件中。&quot;);
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-06 15:55</div>
+</div>
+</body>
+</html>

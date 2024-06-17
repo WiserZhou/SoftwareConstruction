@@ -1,0 +1,264 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > GraphPoet</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">poet</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphPoet (poet)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphPoet</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.8%
+  </span>
+  <span class="absValue">
+    (23/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (40/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package poet;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;import graph.ConcreteEdgesGraph;
+&nbsp;import graph.Graph;
+&nbsp;
+&nbsp;/**
+&nbsp; * A graph-based poetry generator.
+&nbsp; *
+&nbsp; * &lt;p&gt;GraphPoet is initialized with a corpus of text, which it uses to derive a
+&nbsp; * word affinity graph.
+&nbsp; * Vertices in the graph are words. Words are defined as non-empty
+&nbsp; * case-insensitive strings of non-space non-newline characters. They are
+&nbsp; * delimited in the corpus by spaces, newlines, or the ends of the file.
+&nbsp; * Edges in the graph count adjacencies: the number of times &quot;w1&quot; is followed by
+&nbsp; * &quot;w2&quot; in the corpus is the weight of the edge from w1 to w2.
+&nbsp; *
+&nbsp; * &lt;p&gt;For example, given this corpus:
+&nbsp; * &lt;pre&gt;    Hello, HELLO, hello, goodbye!    &lt;/pre&gt;
+&nbsp; * &lt;p&gt;the graph would contain two edges:
+&nbsp; * &lt;ul&gt;&lt;li&gt; (&quot;hello,&quot;) -&gt; (&quot;hello,&quot;)   with weight 2
+&nbsp; *     &lt;li&gt; (&quot;hello,&quot;) -&gt; (&quot;goodbye!&quot;) with weight 1 &lt;/ul&gt;
+&nbsp; * &lt;p&gt;where the vertices represent case-insensitive {@code &quot;hello,&quot;} and
+&nbsp; * {@code &quot;goodbye!&quot;}.
+&nbsp; *
+&nbsp; * &lt;p&gt;Given an input string, GraphPoet generates a poem by attempting to
+&nbsp; * insert a bridge word between every adjacent pair of words in the input.
+&nbsp; * The bridge word between input words &quot;w1&quot; and &quot;w2&quot; will be some &quot;b&quot; such that
+&nbsp; * w1 -&gt; b -&gt; w2 is a two-edge-long path with maximum-weight weight among all
+&nbsp; * the two-edge-long paths from w1 to w2 in the affinity graph.
+&nbsp; * If there are no such paths, no bridge word is inserted.
+&nbsp; * In the output poem, input words retain their original case, while bridge
+&nbsp; * words are lower case. The whitespace between every word in the poem is a
+&nbsp; * single space.
+&nbsp; *
+&nbsp; * &lt;p&gt;For example, given this corpus:
+&nbsp; * &lt;pre&gt;    This is a test of the Mugar Omni Theater sound system.    &lt;/pre&gt;
+&nbsp; * &lt;p&gt;on this input:
+&nbsp; * &lt;pre&gt;    Test the system.    &lt;/pre&gt;
+&nbsp; * &lt;p&gt;the output poem would be:
+&nbsp; * &lt;pre&gt;    Test of the system.    &lt;/pre&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;PS2 instructions: this is a required ADT class, and you MUST NOT weaken
+&nbsp; * the required specifications. However, you MAY sengthen the specifications
+&nbsp; *  * and you MAY add additional methods.tr
+&nbsp; * You MUST use Graph in your rep, but otherwise the implementation of this
+&nbsp; * class is up to you.
+&nbsp; */
+<b class="fc">&nbsp;public class GraphPoet {</b>
+<b class="fc">&nbsp;    private final Graph&lt;String&gt; graph = new ConcreteEdgesGraph&lt;&gt;();</b>
+&nbsp;
+&nbsp;    // Abstraction function:
+&nbsp;    // 是一个利用加权有向图寻找两点中间有无通路的方法，到实际给一句话添加中间词的问题的映射
+&nbsp;
+&nbsp;    // Representation invariant:
+&nbsp;    // 新加入的词必须是两点中间的bridge，weight必须大于0
+&nbsp;
+&nbsp;    // 必要时使用防御性拷贝
+&nbsp;    // Safety from rep exposure:
+&nbsp;    // 设置graph为private final
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 使用给定的语料库文本文件创建一个新的诗人，并生成诗人的关联图。
+&nbsp;     *
+&nbsp;     * @param corpus 用于构建诗人亲和图的文本文件
+&nbsp;     * @throws IOException 如果无法找到或读取语料库文件
+&nbsp;     */
+<b class="fc">&nbsp;    public GraphPoet(File corpus) throws IOException {</b>
+<b class="fc">&nbsp;        BufferedReader in = new BufferedReader(new FileReader(corpus));</b>
+<b class="fc">&nbsp;        List&lt;String&gt; list = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();</b>
+&nbsp;        String string;
+&nbsp;        // 读取语料库文件并处理
+<b class="fc">&nbsp;        while ((string = in.readLine()) != null) {</b>
+<b class="fc">&nbsp;            list.addAll(Arrays.asList(string.split(&quot; &quot;)));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        in.close();</b>
+&nbsp;        // 构建关联图
+<b class="fc">&nbsp;        for (int i = 0; i &lt; list.size() - 1; i++) {</b>
+<b class="fc">&nbsp;            String source = list.get(i).toLowerCase();</b>
+<b class="fc">&nbsp;            String target = list.get(i + 1).toLowerCase();</b>
+<b class="fc">&nbsp;            int preweight = 0;</b>
+<b class="fc">&nbsp;            if (map.containsKey(source + target)) {</b>
+<b class="fc">&nbsp;                preweight = map.get(source + target);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            map.put(source + target, preweight + 1);</b>
+<b class="fc">&nbsp;            graph.set(source, target, preweight + 1);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        checkRep();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 检查诗人的亲和图是否符合表示不变式。
+&nbsp;     */
+&nbsp;    private void checkRep() {
+<b class="fc">&nbsp;        for (String source : graph.vertices()) {</b>
+<b class="fc">&nbsp;            for (String target : graph.targets(source).keySet()) {</b>
+<b class="pc">&nbsp;                assert graph.targets(source).get(target) &gt; 0 : &quot;边的权重必须大于0&quot;;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * 生成一首诗。
+&nbsp;     *
+&nbsp;     * @param input 用于创建诗的字符串
+&nbsp;     * @return 诗（如上所述）
+&nbsp;     */
+&nbsp;    public String poem(String input) {
+<b class="fc">&nbsp;        StringBuilder SB = new StringBuilder();</b>
+<b class="fc">&nbsp;        List&lt;String&gt; list = new ArrayList&lt;&gt;(Arrays.asList(input.split(&quot; &quot;)));</b>
+&nbsp;        Map&lt;String, Integer&gt; sourceMap;
+&nbsp;        Map&lt;String, Integer&gt; targetMap;
+&nbsp;        // 从输入字符串生成诗
+<b class="fc">&nbsp;        for (int i = 0; i &lt; list.size() - 1; i++) {</b>
+<b class="fc">&nbsp;            SB.append(list.get(i)).append(&quot; &quot;);</b>
+<b class="fc">&nbsp;            String sourceString = list.get(i).toLowerCase();</b>
+<b class="fc">&nbsp;            String targetString = list.get(i + 1).toLowerCase();</b>
+<b class="fc">&nbsp;            targetMap = graph.targets(sourceString);</b>
+<b class="fc">&nbsp;            sourceMap = graph.sources(targetString);</b>
+<b class="fc">&nbsp;            int maxWeight = 0;</b>
+<b class="fc">&nbsp;            String bridgeWord = &quot;&quot;;</b>
+&nbsp;            // 寻找连接词
+<b class="fc">&nbsp;            for (String string : targetMap.keySet()) {</b>
+<b class="fc">&nbsp;                if (sourceMap.containsKey(string) &amp;&amp; sourceMap.get(string) + targetMap.get(string) &gt; maxWeight) {</b>
+<b class="fc">&nbsp;                    maxWeight = sourceMap.get(string) + targetMap.get(string);</b>
+<b class="fc">&nbsp;                    bridgeWord = string;</b>
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;            if (maxWeight &gt; 0) {</b>
+<b class="fc">&nbsp;                SB.append(bridgeWord).append(&quot; &quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        SB.append(list.getLast());</b>
+<b class="fc">&nbsp;        return SB.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        return graph.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-06 15:55</div>
+</div>
+</body>
+</html>
